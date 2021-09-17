@@ -10,10 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_17_135141) do
+ActiveRecord::Schema.define(version: 2021_09_17_135718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "receipt_records", force: :cascade do |t|
+    t.date "trans_date"
+    t.string "category"
+    t.string "provider"
+    t.text "description"
+    t.boolean "qualified_exp"
+    t.float "amount"
+    t.string "payment_method"
+    t.string "reimbursed"
+    t.text "notes"
+    t.string "hsa_trans_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
