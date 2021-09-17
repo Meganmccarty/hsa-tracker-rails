@@ -9,4 +9,6 @@ class ReceiptRecord < ApplicationRecord
     }
 
     belongs_to :user
+
+    has_many_attached :receipt_images
 end
