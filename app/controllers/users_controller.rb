@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+    before_action :authorize, only [:show]
 
     def show
         user = User.find_by(email: params[:email])
@@ -17,6 +18,10 @@ class UsersController < ApplicationController
 
     def user_params
         params.permit(:first_name, :last_name, :email, :password, :password_confirmation)
+    end
+
+    def authorize
+        render json: { error: "Not authorized" }, status: :unauthorized unless session.include? :user_id
     end
 
 end
