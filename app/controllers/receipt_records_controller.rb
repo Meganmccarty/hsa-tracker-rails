@@ -19,9 +19,16 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def update
+        receipt_record = find_receipt_record
+        receipt_record.update(receipt_record_params)
+        render json: receipt_record
     end
 
     def destroy
+        receipt_record = find_receipt_record
+        receipt_record.images.purge
+        receipt_record.destroy
+        head :no_content
     end
 
     private
@@ -30,6 +37,10 @@ class ReceiptRecordsController < ApplicationController
         params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
             :amount, :payment_method, :reimbursed, :notes, :hsa_trans_id, images: []
         )
+    end
+
+    def find_receipt_record
+        ReceiptRecord.find(params[:id])
     end
 
     def render_not_found_response
