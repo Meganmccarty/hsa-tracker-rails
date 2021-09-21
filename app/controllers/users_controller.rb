@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-    before_action :authorize, only [:show]
+    before_action :authorize, only: [:show]
 
     def show
         user = User.find_by(email: params[:email])
