@@ -3,18 +3,13 @@ class ReceiptRecordsController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
     def index
-        receipt_records = ReceiptRecord.all
+        receipt_records = ReceiptRecord.all.with_attached_images
         render json: receipt_records
     end
 
     def create
         user = User.find_by(id: session[:user_id])
-
-        receipt_record = ReceiptRecord.new(receipt_record_params)
-        receipt_record.user_id = user.id
-        receipt_record.attach(params[:images])
-        receipt_record.save
-
+        receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: user.id)
         render json: receipt_record, status: :created
     end
 
