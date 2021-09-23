@@ -9,7 +9,7 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def show
-        receipt_record = current_user.receipt_records.find(id: params[:id])
+        receipt_record = current_user.receipt_records.find(params[:id])
         render json: receipt_record
     end
 
