@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
     def destroy
         session.delete :user_id
-        head :no_content
+        render json: { message: "You have been successfully logged out"}, status: 200
     end
 
 end
