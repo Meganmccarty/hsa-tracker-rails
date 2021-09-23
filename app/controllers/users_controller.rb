@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
     def show
-        user = User.find_by(email: params[:email])
+        user = User.find_by(id: session[:user_id])
         render json: user
     end
 
