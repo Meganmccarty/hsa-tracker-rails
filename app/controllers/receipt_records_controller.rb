@@ -8,6 +8,11 @@ class ReceiptRecordsController < ApplicationController
         render json: receipt_records
     end
 
+    def show
+        receipt_record = current_user.receipt_records.find(id: params[:id])
+        render json: receipt_record
+    end
+
     def create
         receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: current_user.id)
         render json: receipt_record, status: :created
