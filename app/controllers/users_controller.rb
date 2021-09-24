@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     end
 
     def authorize
-        render json: { error: "Not authorized" }, status: :unauthorized unless session.include? :user_id
+        render json: { errors: "Not authorized" }, status: :unauthorized unless session.include? :user_id
     end
 
     def render_unprocessable_entity_response(invalid)

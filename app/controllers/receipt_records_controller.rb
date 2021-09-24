@@ -1,20 +1,24 @@
 class ReceiptRecordsController < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
-    before_action :current_user
+    # before_action :current_user
 
     def index
-        receipt_records = current_user.receipt_records
+        # receipt_records = current_user.receipt_records
+        receipt_records = ReceiptRecord.all
         render json: receipt_records
     end
 
     def show
-        receipt_record = current_user.receipt_records.find(params[:id])
+        # receipt_record = current_user.receipt_records.find(params[:id])
+        receipt_record = ReceiptRecord.find(params[:id])
         render json: receipt_record
     end
 
     def create
-        receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: current_user.id)
+        user = User.find_by(id: session[:id])
+        # receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: current_user.id)
+        receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: user.id)
         render json: receipt_record, status: :created
     end
 
@@ -33,9 +37,9 @@ class ReceiptRecordsController < ApplicationController
 
     private
 
-    def current_user
-        User.find_by(id: session[:user_id])
-    end
+    # def current_user
+    #     User.find_by(id: session[:user_id])
+    # end
 
     def receipt_record_params
         params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
@@ -48,7 +52,7 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def render_not_found_response
-        render json: { error: 'Receipt record not found' }, status: :not_found
+        render json: { errors: 'Receipt record not found' }, status: :not_found
     end
 
     def render_unprocessable_entity_response(invalid)
