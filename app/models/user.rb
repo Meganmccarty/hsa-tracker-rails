@@ -5,5 +5,5 @@ class User < ApplicationRecord
 
     has_secure_password
 
-    has_many :receipt_records
+    has_many :receipt_records, -> { order(trans_date: :desc) }
 end
