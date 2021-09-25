@@ -16,9 +16,11 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def create
-        user = User.find_by(id: session[:id])
+        user = User.find_by(id: session[:user_id])
         # receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: current_user.id)
-        receipt_record = ReceiptRecord.create!(receipt_record_params, user_id: user.id)
+        receipt_record = ReceiptRecord.new(receipt_record_params)
+        receipt_record.user_id = user.id
+        receipt_record.save!
         render json: receipt_record, status: :created
     end
 
@@ -30,9 +32,9 @@ class ReceiptRecordsController < ApplicationController
 
     def destroy
         receipt_record = find_receipt_record
-        receipt_record.images.purge
+        # receipt_record.images.purge
         receipt_record.destroy
-        head :no_content
+        render json: { message: "Receipt record successfully deleted"}, status: 200
     end
 
     private
@@ -42,7 +44,7 @@ class ReceiptRecordsController < ApplicationController
     # end
 
     def receipt_record_params
-        params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
+        params.require(:receipt_record).permit(:trans_date, :category, :provider, :description, :qualified_exp,
             :amount, :payment_method, :reimbursed, :notes, :hsa_trans_id, images: []
         )
     end
