@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-    resources :receipt_records, only: [:create, :update, :destroy]
-
     get "/receipt-records", to: "receipt_records#index"
     get "/receipt-records/:id", to: "receipt_records#show"
+    post "/receipt-records", to: "receipt_records#create"
+    patch "/receipt-records/:id", to: "receipt_records#update"
+    delete "/receipt-records/:id", to: "receipt_records#destroy"
 
     get "/profile", to: "users#show"
     post "/signup", to: "users#create"
