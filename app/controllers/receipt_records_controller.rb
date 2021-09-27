@@ -6,7 +6,7 @@ class ReceiptRecordsController < ApplicationController
     def index
         # receipt_records = current_user.receipt_records
         receipt_records = ReceiptRecord.all
-        render json: receipt_records
+        render json: receipt_records, include: ['receipt_images']
     end
 
     def show
@@ -44,8 +44,8 @@ class ReceiptRecordsController < ApplicationController
     # end
 
     def receipt_record_params
-        params.require(:receipt_record).permit(:trans_date, :category, :provider, :description, :qualified_exp,
-            :amount, :payment_method, :reimbursed, :notes, :hsa_trans_id, images: []
+        params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
+            :amount, :payment_method, :reimbursed, :notes, :hsa_trans_id, receipt_images: []
         )
     end
 
