@@ -42,3 +42,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "aws-sdk-s3", "~> 1.103"
 
 gem "rack-cors", "~> 1.1"
+
+gem "active_model_serializers", "~> 0.10.12"
