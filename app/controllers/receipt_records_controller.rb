@@ -1,17 +1,17 @@
 class ReceiptRecordsController < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
-    # before_action :current_user
+    before_action :current_user
 
     def index
-        # receipt_records = current_user.receipt_records
-        receipt_records = ReceiptRecord.all
+        receipt_records = current_user.receipt_records
+        # receipt_records = ReceiptRecord.all
         render json: receipt_records, include: ['receipt_images']
     end
 
     def show
-        # receipt_record = current_user.receipt_records.find(params[:id])
-        receipt_record = ReceiptRecord.find(params[:id])
+        receipt_record = current_user.receipt_records.find(params[:id])
+        # receipt_record = ReceiptRecord.find(params[:id])
         render json: receipt_record
     end
 
@@ -39,9 +39,9 @@ class ReceiptRecordsController < ApplicationController
 
     private
 
-    # def current_user
-    #     User.find_by(id: session[:user_id])
-    # end
+    def current_user
+        User.find_by(id: session[:user_id])
+    end
 
     def receipt_record_params
         params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
