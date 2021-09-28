@@ -4,7 +4,7 @@ class ReceiptRecordsController < ApplicationController
     before_action :current_user
 
     def index
-        receipt_records = current_user.receipt_records
+        receipt_records = current_user.receipt_records.with_attached_receipt_images
         # receipt_records = ReceiptRecord.all
         render json: receipt_records, include: ['receipt_images']
     end
@@ -26,13 +26,23 @@ class ReceiptRecordsController < ApplicationController
 
     def update
         receipt_record = find_receipt_record
+        to_delete = params[:receipt_images_to_delete]
         receipt_record.update(receipt_record_params)
+
+        if to_delete
+            image_ids = to_delete.split(",").map(&:to_i)
+            image_ids.map do |id|
+                image = receipt_record.receipt_images.find(id)
+                image.purge_later
+            end
+        end
+
         render json: receipt_record
     end
 
     def destroy
         receipt_record = find_receipt_record
-        # receipt_record.images.purge
+        receipt_record.receipt_images.purge_later
         receipt_record.destroy
         render json: { message: "Receipt record successfully deleted"}, status: 200
     end
@@ -50,7 +60,7 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def find_receipt_record
-        ReceiptRecord.find(params[:id])
+        current_user.receipt_records.find(params[:id])
     end
 
     def render_not_found_response
