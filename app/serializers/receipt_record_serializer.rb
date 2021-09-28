@@ -9,9 +9,8 @@ class ReceiptRecordSerializer < ActiveModel::Serializer
 
         object.receipt_images.map do |receipt_image|
             receipt_image.blob.attributes
-                .slice('filename', 'byte_size')
+                .slice('filename', 'byte_size', 'id')
                 .merge(url: receipt_image_url(receipt_image))
-                .tap { |attrs| attrs['name'] = attrs.delete('filename') }
         end
     end
 
