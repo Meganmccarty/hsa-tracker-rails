@@ -1,18 +1,19 @@
-class SessionsController < ApplicationController
+class SessionsController < Devise::SessionsController
+    respond_to :json
 
-    def create
-        user = User.find_by(email: params[:email])
-        if user&.authenticate(params[:password])
-            session[:user_id] = user.id
-            render json: user, include: ['receipt_records'], status: :created
-        else
-            render json: { errors: "Invalid username or password" }, status: :unauthorized
-        end
+    private
+
+    def respond_with(_resource, _opts = {})
+        render json: {
+            status: {code: 200, message: 'Logged in successfully.'}
+        },
+        status: :ok
     end
 
-    def destroy
-        session.delete :user_id
-        render json: { message: "You have been successfully logged out"}, status: 200
+    def respond_to_on_destroy
+        render json: {
+            status: {code: 200, message: 'Logged out successfully'}
+        },
+        status: :ok
     end
-
 end
