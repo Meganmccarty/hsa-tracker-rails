@@ -44,3 +44,6 @@ gem "aws-sdk-s3", "~> 1.103"
 gem "rack-cors", "~> 1.1"
 
 gem "active_model_serializers", "~> 0.10.12"
+
+gem 'devise'
+gem 'devise-jwt'
