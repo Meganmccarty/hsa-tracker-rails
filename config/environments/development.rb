@@ -69,11 +69,13 @@ Rails.application.configure do
             origins 'http://localhost:3001'
             resource '*',
                 headers: :any,
+                expose: ["Authorization"],
                 methods: %i[get post put patch delete options head]
         end
     end
 
     config.action_controller.forgery_protection_origin_check = false
+    config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
     config.session_store :cookie_store, key: '_session_id'
     config.middleware.use ActionDispatch::Cookies
