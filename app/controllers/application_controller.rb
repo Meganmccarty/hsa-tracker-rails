@@ -1,19 +1,12 @@
 class ApplicationController < ActionController::Base
-    include ActionController::Cookies
-    before_action :set_csrf_cookie
+    include ActionController::MimeResponds
+    before_action :configure_permitted_parameters, if: :devise_controller?
+    skip_before_action :verify_authenticity_token
+    respond_to :json
 
-    def set_csrf_cookie
-        if Rails.env == "development"
-            cookies["CSRF-TOKEN"] = {
-                value: form_authenticity_token
-            }
-        elsif Rails.env == "production"
-            cookies["CSRF-TOKEN"] = {
-                value: form_authenticity_token,
-                secure: true,
-                same_site: :strict,
-                domain: 'life-lister.herokuapp.com'
-            }
-        end
+    private
+
+    def configure_permitted_parameters
+        devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :encrypted_password, :password, :password_confirmation, :first_name, :last_name])
     end
 end
