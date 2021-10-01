@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
     post "/forgot-password", to: "passwords#forgot"
     patch "/reset-password", to: "passwords#reset"
+    patch "/change-password", to: "passwords#update"
 
     get "/receipt-records", to: "receipt_records#index"
     get "/receipt-records/:id", to: "receipt_records#show"
@@ -22,4 +23,5 @@ Rails.application.routes.draw do
     delete "/receipt-records/:id", to: "receipt_records#destroy"
 
     get "/profile", to: "users#show"
+    patch "/profile", to: "users#update"
 end
