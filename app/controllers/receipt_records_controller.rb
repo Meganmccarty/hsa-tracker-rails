@@ -5,12 +5,15 @@ class ReceiptRecordsController < ApplicationController
 
     def index
         receipt_records = current_user.receipt_records.with_attached_receipt_images
-        render json: receipt_records, include: ['receipt_images']
+        render json: receipt_records, include: ['receipt_images'], status: :ok
     end
 
     def show
         receipt_record = current_user.receipt_records.find(params[:id])
-        render json: receipt_record
+        render json: {
+            receipt_record: receipt_record,
+            status: { code: 200 }
+        }, status: :ok
     end
 
     def create
@@ -18,7 +21,10 @@ class ReceiptRecordsController < ApplicationController
         receipt_record = ReceiptRecord.new(receipt_record_params)
         receipt_record.user_id = user.id
         receipt_record.save!
-        render json: receipt_record, status: :created
+        render json: {
+            receipt_record: receipt_record,
+            status: { code: 201, message: "Receipt record successfully created" }
+        }, status: :created
     end
 
     def update
@@ -34,14 +40,19 @@ class ReceiptRecordsController < ApplicationController
             end
         end
 
-        render json: receipt_record
+        render json: {
+            receipt_record: receipt_record,
+            status: { code: 202, message: "Receipt record successfully updated" }
+        }, status: :accepted
     end
 
     def destroy
         receipt_record = find_receipt_record
         receipt_record.receipt_images.purge_later
         receipt_record.destroy
-        render json: { message: "Receipt record successfully deleted"}, status: 200
+        render json: {
+            status: { code: 202, message: "Receipt record successfully deleted" } 
+        }, status: :accepted
     end
 
     private
@@ -57,11 +68,15 @@ class ReceiptRecordsController < ApplicationController
     end
 
     def render_not_found_response
-        render json: { errors: 'Receipt record not found' }, status: :not_found
+        render json: {
+            status: { code: 404, errors: 'Receipt record not found' }
+        }, status: :not_found
     end
 
     def render_unprocessable_entity_response(invalid)
-        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
+        render json: { 
+            status: { code: 422, errors: invalid.record.errors.full_messages }
+        }, status: :unprocessable_entity
     end
 
 end
