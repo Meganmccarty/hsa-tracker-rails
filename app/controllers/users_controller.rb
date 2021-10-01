@@ -4,16 +4,24 @@ class UsersController < ApplicationController
 
     def show
         user = current_user
-        render json: user
+        render json: {
+            user: user,
+            status: { code: 200 }
+        }, status: :ok
     end
 
     def update
         user = current_user
         if user
             user.update!(user_params)
-            render json: { user: user, message: "Profile successfully updated" }, status: 200
+            render json: {
+                user: user,
+                status: { code: 200, message: "Profile successfully updated" }
+            }, status: :ok
         else
-            render json: { errors: "Not authorized" }, status: :unauthorized
+            render json: {
+                status: { code: 401, errors: "Not authorized" }
+            }, status: :unauthorized
         end
     end
 
@@ -24,7 +32,9 @@ class UsersController < ApplicationController
     end
 
     def render_unprocessable_entity_response(invalid)
-        render json: { errors: invalid.record.errors.full_messages }, status: :unprocessable_entity
+        render json: {
+            status: { code: 422, errors: invalid.record.errors.full_messages }
+        }, status: :unprocessable_entity
     end
 
 end
