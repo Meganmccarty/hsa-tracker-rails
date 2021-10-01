@@ -6,13 +6,12 @@ class RegistrationsController < Devise::RegistrationsController
     def respond_with(resource, _opts = {})
         if resource.persisted?
             render json: {
-                status: {code: 200, message: 'Signed up sucessfully.'}
-            }
+                status: { code: 200, message: 'Signed up sucessfully' }
+            }, status: :ok
         else
             render json: {
-                status: {code: 422, message: "Sign up failed. #{resource.errors.full_messages.to_sentence}"}
-            },
-            status: :unprocessable_entity
+                status: { code: 422, errors: "Sign up failed. #{resource.errors.full_messages.to_sentence}" }
+            }, status: :unprocessable_entity
         end
     end
 end
