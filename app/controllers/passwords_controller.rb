@@ -34,19 +34,19 @@ class PasswordsController < ApplicationController
         user = current_user
         old_password = params[:old_password]
         if user&.valid_password?(old_password)
-            if user.update!(password_params)
+            if params[:password] != params[:password_confirmation]
+                render json: {
+                    status: { code: 422, errors: ["New passwords do not match"] }
+                }, status: :unprocessable_entity
+            elsif user.update!(password_params)
                 render json: {
                     user: user,
                     status: { code: 200, message: "Password successfully updated" }
                 }, status: :ok
-            else
-                render json: {
-                    status: { code: 422, message: "New passwords do not match" }
-                }, status: :unprocessable_entity
             end
         else
             render json: {
-                status: { code: 422, message: "Old password is incorrect" }
+                status: { code: 422, errors: ["Old password is incorrect"] }
             }, status: :unprocessable_entity
         end
     end
