@@ -12,6 +12,9 @@ Rails.application.routes.draw do
         format: :json
     }
 
+    post "/forgot-password", to: "passwords#forgot"
+    patch "/reset-password", to: "passwords#reset"
+
     get "/receipt-records", to: "receipt_records#index"
     get "/receipt-records/:id", to: "receipt_records#show"
     post "/receipt-records", to: "receipt_records#create"
