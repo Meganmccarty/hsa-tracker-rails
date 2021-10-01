@@ -5,23 +5,28 @@ class PasswordsController < ApplicationController
         user = User.find_by(email: params[:email])
         if user
             user.send_password_reset
-            render json: { message: "We have sent a password reset email." }
-        else
-            render json: { message: "If a user with this email address exists, we have sent a password reset email." }
         end
-        
+        render json: {
+            status: { code: 202, message: "If a user with this email address exists, we have sent a password reset email." }
+        }, status: :accepted
     end
 
     def reset
         user = User.find_by(reset_password_token: params[:token], email: params[:email])
         if user.present? && user.reset_password_token_valid?
             if user.reset_password(params[:password])
-                render json: { message: "Your password has been successfully reset!" }
+                render json: {
+                    status: { code: 200, message: "Your password has been successfully reset!" }
+                }, status: :ok
             else
-                render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+                render json: {
+                    status: { code: 422, errors: user.errors.full_messages }
+                }, status: :unprocessable_entity
             end
         else
-            render json: { errors: "Link not valid or expired. Try generating a new link." }, status: :not_found
+            render json: {
+                status: { code: 404, errors: "Link not valid or expired. Try generating a new link." }
+            }, status: :not_found
         end
     end
 
@@ -30,12 +35,19 @@ class PasswordsController < ApplicationController
         old_password = params[:old_password]
         if user&.valid_password?(old_password)
             if user.update!(password_params)
-                render json: { user: user, message: "Password successfully updated" }, status: 200
+                render json: {
+                    user: user,
+                    status: { code: 200, message: "Password successfully updated" }
+                }, status: :ok
             else
-                render json: { message: "New passwords do not match" }, status: :unprocessable_entity
+                render json: {
+                    status: { code: 422, message: "New passwords do not match" }
+                }, status: :unprocessable_entity
             end
         else
-            render json: { message: "Old password is incorrect" }, status: :unprocessable_entity
+            render json: {
+                status: { code: 422, message: "Old password is incorrect" }
+            }, status: :unprocessable_entity
         end
     end
 
