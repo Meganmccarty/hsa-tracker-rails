@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_30_151544) do
+ActiveRecord::Schema.define(version: 2021_10_02_180023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_151544) do
     t.string "category"
     t.string "provider"
     t.text "description"
-    t.boolean "qualified_exp"
+    t.string "qualified_exp"
     t.float "amount"
     t.string "payment_method"
     t.string "reimbursed"
