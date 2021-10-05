@@ -59,7 +59,7 @@ class ReceiptRecordsController < ApplicationController
 
     def receipt_record_params
         params.permit(:trans_date, :category, :provider, :description, :qualified_exp,
-            :amount, :payment_method, :reimbursed, :notes, :hsa_trans_id, receipt_images: []
+            :amount, :payment_method, :reimbursed, :reimbursed_date, :notes, :hsa_trans_id, receipt_images: []
         )
     end
 
