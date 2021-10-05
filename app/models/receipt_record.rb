@@ -10,10 +10,6 @@ class ReceiptRecord < ApplicationRecord
         in: ['Cash', 'Check', 'Debit Card', 'Credit Card', 'Electronic Bank Transfer', 'HSA Debit Card'],
         message: 'is not a valid option'
     }
-    validates :reimbursed, presence: true, inclusion: {
-        in: ['Yes', 'No', 'N/A'],
-        message: 'is not a valid option'
-    }
 
     belongs_to :user
 
