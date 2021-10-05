@@ -2,7 +2,7 @@ class ReceiptRecordSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
     attributes :id, :trans_date, :category, :provider, :description, :qualified_exp, :amount, :payment_method, 
-        :reimbursed, :notes, :hsa_trans_id, :user_id, :receipt_images
+        :reimbursed, :reimbursed_date, :notes, :hsa_trans_id, :user_id, :receipt_images
 
     def receipt_images
         return unless object.receipt_images.attached?
