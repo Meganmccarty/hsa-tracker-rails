@@ -6,7 +6,10 @@ class ReceiptRecord < ApplicationRecord
         message: 'is not a valid option'
     }
     validates :amount, presence: true
-    validates :payment_method, presence: true
+    validates :payment_method, presence: true, inclusion: {
+        in: ['Cash', 'Check', 'Debit Card', 'Credit Card', 'Electronic Bank Transfer', 'HSA Debit Card'],
+        message: 'is not a valid option'
+    }
     validates :reimbursed, presence: true, inclusion: {
         in: ['Yes', 'No', 'N/A'],
         message: 'is not a valid option'
