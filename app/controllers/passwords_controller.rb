@@ -38,13 +38,17 @@ class PasswordsController < ApplicationController
                 render json: {
                     status: { code: 422, errors: ["New passwords do not match"] }
                 }, status: :unprocessable_entity
+            elsif params[:password].length < 6 && params[:password_confirmation].length < 6
+                render json: {
+                    status: { code: 422, errors: ["Password is too short. Minimum is 6 characters"] }
+                }, status: :unprocessable_entity
             elsif user.update!(password_params)
                 render json: {
                     user: user,
                     status: { code: 200, message: "Password successfully updated" }
                 }, status: :ok
             end
-        else
+        elsif !user&.valid_password?(old_password)
             render json: {
                 status: { code: 422, errors: ["Old password is incorrect"] }
             }, status: :unprocessable_entity
