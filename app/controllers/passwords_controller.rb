@@ -7,14 +7,22 @@ class PasswordsController < ApplicationController
             user.send_password_reset
         end
         render json: {
-            status: { code: 202, message: "If a user with this email address exists, we have sent a password reset email." }
+            status: { code: 202, message: "We have sent a password reset email to the address provided." }
         }, status: :accepted
     end
 
     def reset
         user = User.find_by(reset_password_token: params[:token], email: params[:email])
         if user.present? && user.reset_password_token_valid?
-            if user.reset_password(params[:password])
+            if params[:password] != params[:password_confirmation]
+                render json: {
+                    status: { code: 422, errors: ["New passwords do not match"]}
+                }, status: :unprocessable_entity
+            elsif params[:password].length < 6 && params[:password_confirmation].length < 6
+                render json: {
+                    status: { code: 422, errors: ["Password is too short. Minimum is 6 characters"] }
+                }, status: :unprocessable_entity
+            elsif user.reset_password(params[:password]) && params[:password] == params[:password_confirmation]
                 render json: {
                     status: { code: 200, message: "Your password has been successfully reset!" }
                 }, status: :ok
