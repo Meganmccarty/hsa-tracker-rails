@@ -11,7 +11,7 @@ class ReceiptRecordsController < ApplicationController
     def show
         receipt_record = current_user.receipt_records.find(params[:id])
         render json: {
-            receipt_record: receipt_record,
+            receipt_record: ReceiptRecordSerializer.new(receipt_record),
             status: { code: 200 }
         }, status: :ok
     end
