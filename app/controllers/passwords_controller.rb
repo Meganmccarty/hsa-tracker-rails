@@ -33,7 +33,7 @@ class PasswordsController < ApplicationController
             end
         else
             render json: {
-                status: { code: 404, errors: "Link not valid or expired. Try generating a new link." }
+                status: { code: 404, errors: "Code not valid or expired." }
             }, status: :not_found
         end
     end
