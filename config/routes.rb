@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     patch "/receipt-records/:id", to: "receipt_records#update"
     delete "/receipt-records/:id", to: "receipt_records#destroy"
 
+    get "/receipt-records/:r_id/image-files/:i_id", to: "receipt_records#download"
+
     get "/profile", to: "users#show"
     patch "/profile", to: "users#update"
 end
