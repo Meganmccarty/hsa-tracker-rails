@@ -55,6 +55,16 @@ class ReceiptRecordsController < ApplicationController
         }, status: :accepted
     end
 
+    def download
+        receipt = current_user.receipt_records.with_attached_receipt_images.find(params[:r_id])
+        image = receipt.receipt_images.find(params[:i_id])
+
+        s3 = Aws::S3::Client.new(access_key_id: ENV["ACCESS_KEY"], secret_access_key: ENV["SECRET_ACCESS_KEY"])
+        s3_image = s3.get_object(bucket: ENV['BUCKET'], key: image.key)
+
+        send_data s3_image.body.read, filename: image.filename.to_s, type: image.content_type, disposition: 'attachment'
+    end
+
     private
 
     def receipt_record_params
